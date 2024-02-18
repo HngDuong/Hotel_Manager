@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-001_CREACION BASE DATOS Y TABLAS",
+      "appliesTo": "Sql Server/001_CREACION BASE DATOS Y TABLAS.sql",
+      "type": "launch"
+    }
+  ]
+}

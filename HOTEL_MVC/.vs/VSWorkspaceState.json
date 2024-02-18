@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Proyecto",
+    "\\Proyecto\\ProyectoHotel",
+    "\\Proyecto\\ProyectoHotel\\Controllers",
+    "\\Proyecto\\ProyectoHotel\\Models",
+    "\\Proyecto\\ProyectoHotel\\Views",
+    "\\Proyecto\\ProyectoHotel\\Views\\Shared"
+  ],
+  "SelectedNode": "\\Proyecto\\ProyectoHotel\\Views\\Shared\\_Layout.cshtml",
+  "PreviewInSolutionExplorer": false
+}

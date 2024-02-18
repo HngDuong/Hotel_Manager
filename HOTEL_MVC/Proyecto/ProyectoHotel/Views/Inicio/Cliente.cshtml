@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewBag.Title = "Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary">
+        <h6 class="m-0 font-weight-bold text-white">Danh sách</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <button class="btn btn-success btn-sm" type="button" onclick="abrirModal(null)">Tạo mới</button>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tabla" style="width:100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Loại</th>
+                                <th>Số</th>
+                                <th>Họ</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Loại</th>
+                                <th>Số</th>
+                                <th>Họ</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="FormModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Khách hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="txtid" type="hidden" value="0" />
+                <form id="formNivel">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Loại:</label>
+                                <select class="form-control" id="cbotipodocumento">
+                                    <option value="DNI">Nhận dạng</option>
+                                    <option value="PASAPORTE">Hộ chiếu</option>
+                                    <option value="CARNET EXTRANJERIA">Giấy xuất nhập cảnh</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Số:</label>
+                                <input type="text" class="form-control required" id="txtdocumento" name="descripcion" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Họ:</label>
+                                <input type="text" class="form-control required" id="txtnombre" name="descripcion" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Tên:</label>
+                                <input type="text" class="form-control required" id="txtapellido" name="descripcion" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Email:</label>
+                                <input type="text" class="form-control required" id="txtcorreo" name="descripcion" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="cboEstado">Trạng thái:</label>
+                                <select id="cboEstado" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="0">No Active</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script>
+        var tabladata;
+
+        $(document).ready(function () {
+
+            tabladata = $('#tabla').DataTable({
+                responsive:true,
+                "ajax": {
+                    "url": '@Url.Action("ListarPersona", "Inicio")',
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc": function (json) {
+                        return json.data.filter(function (item) {
+                            return item.oTipoPersona.IdTipoPersona == 3;
+                        });
+                    }
+                },
+                "columns": [
+                    { "data": "TipoDocumento" },
+                    { "data": "Documento" },
+                    { "data": "Nombre" },
+                    { "data": "Apellido" },
+                    { "data": "Correo" },
+                    {
+                        "data": "Estado", "render": function (data) {
+                            if (data) {
+                                return '<span class="badge badge-success p-2">Active</span>'
+                            } else {
+                                return '<span class="badge badge-danger p-2">No Active</span>'
+                            }
+                        }
+                    },
+                    {
+                        "data": "IdPersona", "render": function (data, type, row, meta) {
+
+                            return $("<button>").addClass("btn btn-primary btn-edit btn-sm").append(
+                                $("<i>").addClass("fas fa-pen")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                                $("<button>").addClass("btn btn-danger btn-remove btn-sm ml-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                        },
+                        "orderable": false,
+                        "searchable": false,
+                        "width": "90px"
+                    }
+
+                ],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+                }
+            });
+        });
+
+
+
+        $(document).on('click', '.btn-edit', function (event) {
+            var json = $(this).data("informacion")
+
+            abrirModal(json)
+        });
+
+        function abrirModal(json) {
+            $("#txtid").val(0);
+            $("#cbotipodocumento").val($("#cbotipodocumento option:first").val());
+            $("#txtdocumento").val("");
+            $("#txtnombre").val("");
+            $("#txtapellido").val("");
+            $("#txtcorreo").val("");
+            $("#cboEstado").val(1);
+
+            if (json != null) {
+
+                $("#txtid").val(json.IdPersona);
+                $("#cbotipodocumento").val(json.TipoDocumento);
+                $("#txtdocumento").val(json.Documento);
+                $("#txtnombre").val(json.Nombre);
+                $("#txtapellido").val(json.Apellido);
+                $("#txtcorreo").val(json.Correo);
+                $("#cboEstado").val(json.Estado == true ? 1 : 0);
+            }
+
+            $('#FormModal').modal('show');
+        }
+
+        $(document).on('click', '.btn-remove', function (event) {
+            var json = $(this).data("informacion")
+
+            jQuery.ajax({
+                url: '@Url.Action("DeletePerson", "Start")',
+                type: "POST",
+                data: JSON.stringify({ id: json.IdPersona}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.resultado) {
+                        tabladata.ajax.reload();
+                    } else {
+                        alert("Could not delete")
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+
+                },
+            });
+        });
+
+        function Guardar() {
+            var request = {
+                objeto: {
+                    IdPersona: $("#txtid").val(),
+                    TipoDocumento: $("#cbotipodocumento").val(),
+                    Documento: $("#txtdocumento").val(),
+                    Nombre: $("#txtnombre").val(),
+                    Apellido: $("#txtapellido").val(),
+                    Correo: $("#txtcorreo").val(),
+                    Clave: "",
+                    oTipoPersona: { IdTipoPersona: 3 },
+                    Estado: parseInt($("#cboEstado").val()) == 1 ? true : false
+                }
+            }
+
+            jQuery.ajax({
+                url: '@Url.Action("SavePerson", "Start")',
+                type: "POST",
+                data: JSON.stringify(request),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.resultado) {
+                        tabladata.ajax.reload();
+                        $('#FormModal').modal('hide');
+                    } else {
+                        alert("Could not save changes");
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+
+                },
+            });
+
+        }
+
+    </script>
+
+}
+
+
+
